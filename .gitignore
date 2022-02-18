@@ -1,8 +1,8 @@
-
 .idea/
-
 *.iml
-
 v1_15_2/target/
-
+v1_15_2/src/main/resources/META-INF/*
 v1_16_1/target/
+v1_16_1/src/main/resources/META-INF/*
+v1_17_1/target/
+v1_17_1/src/main/resources/META-INF/*

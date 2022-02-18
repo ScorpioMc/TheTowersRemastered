@@ -59,7 +59,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib</classpathPrefix>
-                            <mainClass>me.PauMAVA.TTR.TTRCore</mainClass>
+                            <mainClass>TTRCore</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

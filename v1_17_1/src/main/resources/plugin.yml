@@ -1,0 +1,31 @@
+name: TheTowersRemastered
+version: 1.3
+api-version: 1.16
+main: me.PauMAVA.TTR.TTRCore
+authors: [PauMAVA, MC_Scorpio]
+
+commands:
+  ttrstart:
+    description: Start the match
+  ttrenable:
+    description: Enbles the plugin on server start.
+  ttrdisable:
+    description: Disables the plugin on server start.
+  ttrstop:
+    description: End the match and stop the server
+permissions:
+  ttr.*:
+    description: Allows all permissions
+    children:
+      ttr.enable: true
+      ttr.disable: true
+      ttr.start: true
+      ttr.stop: true
+  ttr.enable:
+    default: op
+  ttr.disable:
+    default: op
+  ttr.start:
+    default: op
+  ttr.stop :
+    default: op

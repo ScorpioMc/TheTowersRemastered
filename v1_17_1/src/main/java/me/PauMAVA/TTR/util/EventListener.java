@@ -78,9 +78,15 @@ public class EventListener implements Listener {
     public void onPlayerLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         if (plugin.enabled()) {
-            event.setQuitMessage(TTRPrefix.TTR_GAME + "" + ChatColor.RED + "- " + ChatColor.GRAY + player.getName() + PluginString.ON_PLAYER_LEAVE_OUTPUT);
-            plugin.getAutoStarter().removePlayerFromQueue(player);
-            plugin.getPacketInterceptor().removePlayer(player);
+            if (plugin.getCurrentMatch().getStatus() == MatchStatus.PREGAME) {
+                event.setQuitMessage(TTRPrefix.TTR_GAME + "" + ChatColor.RED + "- " + ChatColor.GRAY + player.getName() + PluginString.ON_PLAYER_LEAVE_OUTPUT);
+                plugin.getAutoStarter().removePlayerFromQueue(player);
+                plugin.getPacketInterceptor().removePlayer(player);
+            }
+            if (plugin.getCurrentMatch().isOnCourse()) {
+                plugin.getPacketInterceptor().removePlayer(player);
+                event.setQuitMessage(TTRPrefix.TTR_GAME + "" + ChatColor.RED + "- " + ChatColor.GRAY + player.getName() + ChatColor.RED + " a abandonné son équipe !");
+            }
         }
     }
 

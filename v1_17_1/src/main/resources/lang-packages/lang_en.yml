@@ -1,0 +1,45 @@
+############################
+# TTR PLUGIN LANGUAGE FILE #
+############################
+
+## @@ ENGLISH @@ ##
+
+# Author: PauMAVA
+# Revision: 1.0
+
+###############################################
+lang: en
+###############################################
+
+# These are the chat prefixes, they contain minecraft color codes specified by & and the code character or number.
+# For a list of chat color codes see https://www.colorschemer.com/minecraft-color-codes/
+chat:
+  game_prefix: "&7&l[&r&a&lThe Towers&r&7&l]&r "
+  game_prefix_dark: "&7&l[&r&2&lThe Towers&r&7&l]&r "
+  global_prefix: "&7&l[&r&5&lGLOBAL&r&7&l]&r "
+  team_prefix: "&7&l[&r&b&lTEAM&r&7&l]&r "
+
+
+command:
+  on_plugin_enable: "Plugin enabled on server start. /reload or restart server to apply changes! Players should rejoin..."
+  on_plugin_disable: "Plugin disabled on server start. /reload or restart server to apply changes!"
+  error_expected_integer: "You must input an integer!"
+
+
+gameplay:
+  on_ally_cage_enter: "You can't do that!"
+  on_score: " has scored a point!" # The trailing space is necessary as this string goes after a player name
+  on_win: "WINS!" # Some context: {TEAM_NAME} WINS!
+
+
+events:
+  on_player_join: " has joined the game" # The trailing space is necessary as this string goes after a player name
+  on_player_leave: " has left the game"  # The trailing space is necessary as this string goes after a player name
+  on_place_block_error: "You cannot place a block there!"
+  on_break_block_error: "You cannot break that block!"
+
+
+other:
+  disabled_on_startup: "TTR is disabled on server start. Use /ttrenable to enable it on start. Make sure to be using the desired map."
+  total_time_label: "Total time: "
+  translation_made_by: "Translation to english made by " # Replace the language with the language of this file. Your name will be automatically appended by the plugin, do not put it in this string!
