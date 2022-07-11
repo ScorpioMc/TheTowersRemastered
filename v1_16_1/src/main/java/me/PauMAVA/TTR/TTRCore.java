@@ -31,12 +31,9 @@ import me.PauMAVA.TTR.ui.TTRScoreboard;
 import me.PauMAVA.TTR.util.EventListener;
 import me.PauMAVA.TTR.util.PacketInterceptor;
 import me.PauMAVA.TTR.world.TTRWorldHandler;
+import me.PauMAVA.TTR.world.TTRWorldSetup;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.IOException;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 
 public class TTRCore extends JavaPlugin {
 
@@ -51,13 +48,16 @@ public class TTRCore extends JavaPlugin {
     private LanguageManager languageManager;
     private PacketInterceptor packetInterceptor;
 
+    private TTRWorldSetup setup;
+
     private boolean isCounting = false;
 
     @Override
     public void onLoad() {
+        this.setup = new TTRWorldSetup();
         saveDefaultConfig();
-        deleteWorld("world");
-        copyWorld("TTRDefaultMap", "world");
+        setup.deleteWorld("world");
+        setup.copyWorld("TTRDefaultMap", "world");
     }
 
     @Override
@@ -151,54 +151,6 @@ public class TTRCore extends JavaPlugin {
 
     public PacketInterceptor getPacketInterceptor() {
         return packetInterceptor;
-    }
-
-    public void deleteWorld(String cible) {
-        Path dir = Paths.get(cible);
-        try {
-            Files.walkFileTree(dir, new SimpleFileVisitor<>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    System.out.println("Deleting file: " + file);
-                    Files.delete(file);
-                    return FileVisitResult.CONTINUE;
-                }
-
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                    System.out.println("Deleting dir: " + dir);
-                    if (exc == null) {
-                        Files.delete(dir);
-                        return FileVisitResult.CONTINUE;
-                    } else {
-                        throw exc;
-                    }
-                }
-
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void copyWorld(String source, String cible) {
-        Path sourceDir = Paths.get(source);
-        Path destinationDir = Paths.get(cible);
-
-        // Traverse the file tree and copy each file/directory.
-        try {
-            Files.walk(sourceDir).forEach(sourcePath -> {
-                try {
-                    Path targetPath = destinationDir.resolve(sourceDir.relativize(sourcePath));
-                    System.out.printf("Copying %s to %s%n", sourcePath, targetPath);
-                    Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
-                } catch (IOException ex) {
-                    System.out.format("I/O error: %s%n", ex);
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 }

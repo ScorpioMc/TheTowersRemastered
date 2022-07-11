@@ -47,15 +47,15 @@ public class ReflectionUtils {
         Object asCraftPlayer = CraftPlayer.cast(player);
         Method getHandle = CraftPlayer.getMethod("getHandle");
         Object playerHandle = getHandle.invoke(asCraftPlayer);
-        Field playerConnectionField = playerHandle.getClass().getDeclaredField("playerConnection");
+        Field playerConnectionField = playerHandle.getClass().getDeclaredField("b");
         return playerConnectionField.get(playerHandle);
     }
 
     public static Channel getPlayerChannel(Player player) throws NoSuchFieldException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Object playerConnection = getPlayerConnection(player);
-        Field networkManagerField = playerConnection.getClass().getDeclaredField("networkManager");
+        Field networkManagerField = playerConnection.getClass().getDeclaredField("a");
         Object networkManager = networkManagerField.get(playerConnection);
-        Field playerChannelField = networkManager.getClass().getDeclaredField("channel");
+        Field playerChannelField = networkManager.getClass().getDeclaredField("k");
         Object playerChannel = playerChannelField.get(networkManager);
         if (playerChannel instanceof Channel) {
             return (Channel) playerChannel;
@@ -71,7 +71,11 @@ public class ReflectionUtils {
     }
 
     public static Class<?> getNMSClass(String clazz) throws ClassNotFoundException {
-        return Class.forName("net.minecraft.server." + version + "." + clazz);
+        return Class.forName("net.minecraft.server." + clazz);
+    }
+
+    public static Class<?> getPacketClass(String clazz) throws ClassNotFoundException {
+        return Class.forName("net.minecraft.network.protocol.game." + clazz);
     }
 
     public static Class<?> getCraftbukkitClass(String clazz) throws ClassNotFoundException {

@@ -35,6 +35,7 @@ public class LanguageManager {
         LocaleRegistry.registerLocale(new Locale("ENGLISH", "en", "PauMAVA"));
     }
 
+
     private void extractLanguageFiles() {
         HashMap<File, InputStream> streams = new HashMap<>();
         for (Locale locale: LocaleRegistry.getLocales()) {

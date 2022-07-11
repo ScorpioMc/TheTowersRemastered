@@ -22,6 +22,7 @@ import me.PauMAVA.TTR.TTRCore;
 import me.PauMAVA.TTR.lang.PluginString;
 import me.PauMAVA.TTR.teams.TTRTeam;
 import me.PauMAVA.TTR.util.ReflectionUtils;
+import me.PauMAVA.TTR.util.TTRPrefix;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -60,12 +61,13 @@ public class TTRMatch {
         this.lootSpawner.startSpawning();
         TTRCore.getInstance().getWorldHandler().configureTime();
         TTRCore.getInstance().getWorldHandler().configureWeather();
-        TTRCore.getInstance().getWorldHandler().setWorldDifficulty(Difficulty.PEACEFUL);
+        TTRCore.getInstance().getWorldHandler().setWorldDifficulty(Difficulty.NORMAL);
         TTRCore.getInstance().getScoreboard().startScoreboardTask();
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             TTRTeam playerTeam = TTRCore.getInstance().getTeamHandler().getPlayerTeam(player);
             if (playerTeam == null) {
-                continue;
+                player.setGameMode(GameMode.SPECTATOR);
+                player.sendMessage(TTRPrefix.TTR_GAME + "" + ChatColor.RED + "You didn't choose a team, you're now spectator");
             }
             player.teleport(TTRCore.getInstance().getConfigManager().getTeamSpawn(playerTeam.getIdentifier()));
             player.getInventory().clear();
@@ -121,8 +123,8 @@ public class TTRMatch {
             @Override
             public void run() {
                 try {
-                    Object packet = ReflectionUtils.createNMSInstance("PacketPlayInClientCommand", List.of(), List.of());
-                    Class<?> enumClientCommand = ReflectionUtils.getNMSClass("PacketPlayInClientCommand$EnumClientCommand");
+                    Object packet = ReflectionUtils.getPacketClass("PacketPlayInClientCommand");
+                    Class<?> enumClientCommand = ReflectionUtils.getPacketClass("PacketPlayInClientCommand$EnumClientCommand");
                     // TODO Test if enumClientCommand.getEnumConstants())[0] works.
                     Object performRespawnConstant = null;
                     for (Object constant: enumClientCommand.getEnumConstants()) {
@@ -139,7 +141,7 @@ public class TTRMatch {
                     a.setAccessible(true);
                     a.set(packet, performRespawnConstant);
                     Object playerConnection = ReflectionUtils.getPlayerConnection(player);
-                    Class<?> packetClass = ReflectionUtils.getNMSClass("PacketPlayInClientCommand");
+                    Class<?> packetClass = ReflectionUtils.getPacketClass("PacketPlayInClientCommand");
                     Method aMethod = playerConnection.getClass().getMethod("a", packetClass);
                     aMethod.invoke(playerConnection, packetClass.cast(packet));
                 } catch (Exception e) {

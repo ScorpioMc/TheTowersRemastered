@@ -65,19 +65,25 @@ public class CageChecker {
     }
 
     private void playerOnCage(Player player) {
+        TTRTeam playersTeam = TTRCore.getInstance().getTeamHandler().getPlayerTeam(player);
         if (!player.getGameMode().equals(GameMode.SURVIVAL) && !player.isOp()) {
-            player.kickPlayer(ChatColor.DARK_RED + "Tu as été explusé de la partie suite à un changement de ton mode de jeu.");
+            player.kickPlayer(ChatColor.DARK_RED + "You have been kicked from the game after gamemode changement. You can rejoin it as spectator");
         } else {
-            TTRTeam playersTeam = TTRCore.getInstance().getTeamHandler().getPlayerTeam(player);
-            player.teleport(TTRCore.getInstance().getConfigManager().getTeamSpawn(playersTeam.getIdentifier()));
-            playersTeam.addPoints(1);
-            TTRCore.getInstance().getScoreboard().refreshScoreboard();
-            Bukkit.broadcastMessage(TTRPrefix.TTR_GAME + "" + ChatColor.GRAY + player.getName() + PluginString.SCORE_OUTPUT);
-            for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-                p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 1);
-            }
-            if (playersTeam.getPoints() >= TTRCore.getInstance().getConfigManager().getMaxPoints()) {
-                TTRCore.getInstance().getCurrentMatch().endMatch(playersTeam);
+            TTRMatch match = TTRCore.getInstance().getCurrentMatch();
+            if (match.getStatus() == MatchStatus.INGAME) {
+                player.teleport(TTRCore.getInstance().getConfigManager().getTeamSpawn(playersTeam.getIdentifier()));
+                playersTeam.addPoints(1);
+                TTRCore.getInstance().getScoreboard().refreshScoreboard();
+                Bukkit.broadcastMessage(TTRPrefix.TTR_GAME + "" + ChatColor.GRAY + player.getName() + PluginString.SCORE_OUTPUT);
+                for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+                    p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 10, 1);
+                }
+                if (playersTeam.getPoints() >= TTRCore.getInstance().getConfigManager().getMaxPoints()) {
+                    TTRCore.getInstance().getCurrentMatch().endMatch(playersTeam);
+                }
+            } else {
+                player.teleport(TTRCore.getInstance().getConfigManager().getTeamSpawn(playersTeam.getIdentifier()));
+                player.sendMessage(ChatColor.DARK_RED + "Game has been ended, you can't score any more point.");
             }
         }
     }

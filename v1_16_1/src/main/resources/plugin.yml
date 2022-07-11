@@ -8,7 +8,7 @@ commands:
   ttrstart:
     description: Start the match
   ttrenable:
-    description: Enbles the plugin on server start.
+    description: Enables the plugin on server start.
   ttrdisable:
     description: Disables the plugin on server start.
   ttrstop:

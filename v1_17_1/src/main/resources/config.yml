@@ -1,0 +1,71 @@
+enable_on_start: true
+autostart:
+  enabled: true
+  count: 4
+match:
+  time: 10000
+  weather: CLEAR
+  maxpoints: 10
+  maxhealth: 20
+map:
+  lobby:
+    ==: org.bukkit.Location
+    world: world
+    x: 0.0
+    y: 207.0
+    z: 1014.0
+    pitch: 0.0
+    yaw: 0.0
+  ironspawns:
+    - ==: org.bukkit.Location
+      world: world
+      x: 0.0
+      y: 206.0
+      z: 1138.0
+      pitch: 0.0
+      yaw: 0.0
+  xpspawns:
+    - ==: org.bukkit.Location
+      world: world
+      x: 0.0
+      y: 206.0
+      z: 1166.0
+      pitch: 0.0
+      yaw: 0.0
+teams:
+  Red Team:
+    color: RED
+    spawn:
+      ==: org.bukkit.Location
+      world: world
+      x: 84.0
+      y: 192.0
+      z: 1152.0
+      pitch: 0.0
+      yaw: 0.0
+    cage:
+      ==: org.bukkit.Location
+      world: world
+      x: 84.0
+      y: 200.0
+      z: 1152.0
+      pitch: 0.0
+      yaw: 0.0
+  Blue Team:
+    color: BLUE
+    spawn:
+      ==: org.bukkit.Location
+      world: world
+      x: -83.0
+      y: 192.0
+      z: 1152.0
+      pitch: 0.0
+      yaw: 0.0
+    cage:
+      ==: org.bukkit.Location
+      world: world
+      x: -83.0
+      y: 200.0
+      z: 1152.0
+      pitch: 0.0
+      yaw: 0.0

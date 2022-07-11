@@ -43,7 +43,7 @@ public class PacketInterceptor {
             public void channelRead(ChannelHandlerContext context, Object packet) {
                 try {
                     if (plugin.enabled() && plugin.getCurrentMatch().isOnCourse()) {
-                        Class<?> packetPlayInChatClazz = ReflectionUtils.getNMSClass("PacketPlayInChat");
+                        Class<?> packetPlayInChatClazz = ReflectionUtils.getPacketClass("PacketPlayInChat");
                         if (packet.getClass().equals(packetPlayInChatClazz)) {
                             Object asPacketPlayInChat = packetPlayInChatClazz.cast(packet);
                             String message = ReflectionUtils.callMethod(asPacketPlayInChat, "b", List.of(), List.of(), String.class);
