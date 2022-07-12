@@ -18,6 +18,8 @@
 
 package me.PauMAVA.TTR.ui;
 
+import static org.bukkit.ChatColor.*;
+
 import me.PauMAVA.TTR.TTRCore;
 import me.PauMAVA.TTR.teams.TTRTeam;
 import org.bukkit.ChatColor;
@@ -76,12 +78,15 @@ public class TeamSelector extends CustomUI implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        String game = TTRCore.getInstance().translate("&7&l[&r&a&lThe Towers&r&7&l]&r ");
         if (event.getClickedInventory() == super.getInventory() && event.getClickedInventory().getItem(event.getSlot()) != null) {
             this.selected = event.getSlot();
             setUp();
             addEnchantment(this.selected);
             String teamName = super.getInventory().getItem(this.selected).getItemMeta().getDisplayName();
             TTRCore.getInstance().getTeamHandler().addPlayer(teamName, this.owner);
+            player.sendMessage(game + YELLOW + "Joined " + teamName);
             if (lastTeam != null) {
                 TTRCore.getInstance().getTeamHandler().removePlayer(teamName, this.owner);
             }

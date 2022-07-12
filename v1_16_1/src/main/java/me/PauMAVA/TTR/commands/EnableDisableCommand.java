@@ -18,6 +18,8 @@
 
 package me.PauMAVA.TTR.commands;
 
+import static org.bukkit.ChatColor.*;
+
 import me.PauMAVA.TTR.TTRCore;
 import me.PauMAVA.TTR.lang.PluginString;
 import me.PauMAVA.TTR.util.TTRPrefix;
@@ -36,18 +38,23 @@ public class EnableDisableCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender theSender, Command cmd, String label, String[] args) {
+        String game = plugin.translate("&7&l[&r&a&lThe Towers&r&7&l]&r ");
         if (label.equalsIgnoreCase("ttrenable")) {
             if (!theSender.hasPermission("ttr.enable")) {
-                theSender.sendMessage(ChatColor.DARK_RED + "You are not permitted to use this command.");
+                theSender.sendMessage(DARK_RED + "You are not permitted to use this command.");
             }
             plugin.getConfigManager().setEnableOnStart(true);
-            theSender.sendMessage(TTRPrefix.TTR_GAME + "" + ChatColor.GREEN + PluginString.TTR_ENABLE_OUTPUT);
-        } else if (label.equalsIgnoreCase("ttrdisable")) {
+            String enabled = plugin.translate("Plugin enabled on server start. Restart the server to apply changes! Players should rejoin...");
+            theSender.sendMessage(game + GREEN + enabled);
+        }
+
+        if (label.equalsIgnoreCase("ttrdisable")) {
             if (!theSender.hasPermission("ttr.disable")) {
-                theSender.sendMessage(ChatColor.DARK_RED + "You are not permitted to use this command.");
+                theSender.sendMessage(DARK_RED + "You are not permitted to use this command.");
             }
             plugin.getConfigManager().setEnableOnStart(false);
-            theSender.sendMessage(TTRPrefix.TTR_GAME + "" + ChatColor.RED + PluginString.TTR_DISABLE_OUTPUT);
+            String disabled = plugin.translate("Plugin disabled on server start. Restart the server to apply changes!");
+            theSender.sendMessage(game + RED + disabled);
         }
         return false;
     }

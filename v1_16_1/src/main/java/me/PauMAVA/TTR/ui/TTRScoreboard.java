@@ -1,5 +1,7 @@
 package me.PauMAVA.TTR.ui;
 
+import static org.bukkit.ChatColor.*;
+
 import me.PauMAVA.TTR.TTRCore;
 import me.PauMAVA.TTR.lang.PluginString;
 import me.PauMAVA.TTR.teams.TTRTeam;
@@ -21,11 +23,11 @@ public class TTRScoreboard {
 
     public TTRScoreboard() {
         this.ttrScoreboard = this.scoreboardManager.getNewScoreboard();
-        this.kills = this.ttrScoreboard.registerNewObjective("kills", "dummy", ChatColor.LIGHT_PURPLE + "kills");
+        this.kills = this.ttrScoreboard.registerNewObjective("kills", "dummy", LIGHT_PURPLE + "kills");
         this.kills.setDisplaySlot(DisplaySlot.PLAYER_LIST);
-        this.health = this.ttrScoreboard.registerNewObjective("showhealth", "health", ChatColor.RED + "❤");
+        this.health = this.ttrScoreboard.registerNewObjective("showhealth", "health", RED + "❤");
         this.health.setDisplaySlot(DisplaySlot.BELOW_NAME);
-        this.points = this.ttrScoreboard.registerNewObjective("points", "dummy", ChatColor.AQUA + "" + ChatColor.BOLD + "Points");
+        this.points = this.ttrScoreboard.registerNewObjective("points", "dummy", AQUA + "" + BOLD + "Points");
         this.points.setDisplaySlot(DisplaySlot.SIDEBAR);
     }
 
@@ -50,11 +52,11 @@ public class TTRScoreboard {
             @Override
             public void run() {
                 updatePoints();
-                points.getScore(ChatColor.DARK_GRAY + "§m                         ").setScore(-1);
+                points.getScore(DARK_GRAY + "§m                         ").setScore(-1);
                 if (totalTime != null) {
                     ttrScoreboard.resetScores(totalTime.getEntry());
                 }
-                totalTime = points.getScore(ChatColor.GREEN + "" + ChatColor.BOLD + PluginString.TOTAL_TIME_LABEL + ChatColor.GRAY + prettyTime(i));
+                totalTime = points.getScore(GREEN + "" + BOLD + "Total time: " + GRAY + prettyTime(i));
                 totalTime.setScore(-2);
                 i++;
                 refreshScoreboard();
@@ -81,7 +83,7 @@ public class TTRScoreboard {
     private void updatePoints() {
         for (TTRTeam team : TTRCore.getInstance().getTeamHandler().getTeams()) {
             ChatColor teamColor = TTRCore.getInstance().getConfigManager().getTeamColor(team.getIdentifier());
-            points.getScore(teamColor + "" + ChatColor.BOLD + team.getIdentifier()).setScore(team.getPoints());
+            points.getScore(teamColor + "" + BOLD + team.getIdentifier()).setScore(team.getPoints());
         }
     }
 

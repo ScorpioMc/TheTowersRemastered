@@ -18,6 +18,8 @@
 
 package me.PauMAVA.TTR.util;
 
+import static org.bukkit.ChatColor.*;
+
 import me.PauMAVA.TTR.TTRCore;
 import me.PauMAVA.TTR.lang.PluginString;
 import me.PauMAVA.TTR.match.MatchStatus;
@@ -34,28 +36,29 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class EventListener implements Listener {
 
     private final TTRCore plugin;
-    
+
     public EventListener(TTRCore plugin) {
         this.plugin = plugin;
     }
-    
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        String game = plugin.translate("&7&l[&r&a&lThe Towers&r&7&l]&r ");
+        if (!plugin.enabled()) {
+            player.sendMessage(game + RED + "Plugin isn't enabled at start, please run '/ttrenable' and restart the server.");
+        }
         if (plugin.enabled()) {
             if (plugin.getCurrentMatch().getStatus() == MatchStatus.PREGAME) {
                 plugin.getPacketInterceptor().addPlayer(player);
-                event.setJoinMessage(TTRPrefix.TTR_GAME + "" + ChatColor.GREEN + "+ " + ChatColor.GRAY + player.getName() + PluginString.ON_PLAYER_JOIN_OUTPUT);
+                event.setJoinMessage(game + "" + GREEN + "+ " + GRAY + player.getName() + " has joined the game");
                 player.setGameMode(GameMode.ADVENTURE);
                 Inventory playerInventory = event.getPlayer().getInventory();
                 playerInventory.clear();
@@ -69,7 +72,7 @@ public class EventListener implements Listener {
             if (plugin.getCurrentMatch().getStatus() == MatchStatus.INGAME) {
                 event.setJoinMessage("");
                 player.setGameMode(GameMode.SPECTATOR);
-                player.sendMessage(TTRPrefix.TTR_GAME + "" + ChatColor.RED + "Game already started, you are now spectator.");
+                player.sendMessage(game + "" + RED + "Game already started, you are now spectator.");
             }
         }
     }
@@ -77,8 +80,9 @@ public class EventListener implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        String game = plugin.translate("&7&l[&r&a&lThe Towers&r&7&l]&r ");
         if (plugin.enabled()) {
-            event.setQuitMessage(TTRPrefix.TTR_GAME + "" + ChatColor.RED + "- " + ChatColor.GRAY + player.getName() + PluginString.ON_PLAYER_LEAVE_OUTPUT);
+            event.setQuitMessage(game + "" + RED + "- " + GRAY + player.getName() + " has left the game");
             plugin.getAutoStarter().removePlayerFromQueue(player);
             plugin.getPacketInterceptor().removePlayer(player);
         }
@@ -106,16 +110,18 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void placeBlockEvent(BlockPlaceEvent event) {
+        String game = plugin.translate("&7&l[&r&a&lThe Towers&r&7&l]&r ");
         if (plugin.enabled() && !(plugin.getCurrentMatch().getStatus() == MatchStatus.INGAME)) {
-            event.getPlayer().sendMessage(TTRPrefix.TTR_GAME + "" + ChatColor.RED + PluginString.ON_PLACE_BLOCK_ERROR);
+            event.getPlayer().sendMessage(game + "" + RED + "You cannot place a block there!");
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void breakBlockEvent(BlockBreakEvent event) {
+        String game = plugin.translate("&7&l[&r&a&lThe Towers&r&7&l]&r ");
         if (plugin.enabled() && !plugin.getCurrentMatch().isOnCourse()) {
-            event.getPlayer().sendMessage(TTRPrefix.TTR_GAME + "" + ChatColor.RED + PluginString.ON_BREAK_BLOCK_ERROR);
+            event.getPlayer().sendMessage(game + "" + RED + "You cannot break that block there!");
             event.setCancelled(true);
         }
     }
@@ -134,5 +140,15 @@ public class EventListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent event) {
+        Player player = event.getPlayer();
+        String game = plugin.translate("&7&l[&r&a&lThe Towers&r&7&l]&r ");
+        if (event.getMessage().startsWith("/")) {
+            if (plugin.getCurrentMatch().isOnCourse()) {
+                player.sendMessage(game + DARK_RED + "Commands are disabled.");
+            }
+        }
+    }
 
 }

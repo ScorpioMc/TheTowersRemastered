@@ -22,7 +22,6 @@ import me.PauMAVA.TTR.commands.StartMatchCommand;
 import me.PauMAVA.TTR.commands.StopMatchCommand;
 import me.PauMAVA.TTR.config.TTRConfigManager;
 import me.PauMAVA.TTR.lang.LanguageManager;
-import me.PauMAVA.TTR.lang.PluginString;
 import me.PauMAVA.TTR.match.AutoStarter;
 import me.PauMAVA.TTR.match.MatchStatus;
 import me.PauMAVA.TTR.match.TTRMatch;
@@ -32,6 +31,7 @@ import me.PauMAVA.TTR.util.EventListener;
 import me.PauMAVA.TTR.util.PacketInterceptor;
 import me.PauMAVA.TTR.world.TTRWorldHandler;
 import me.PauMAVA.TTR.world.TTRWorldSetup;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -47,9 +47,7 @@ public class TTRCore extends JavaPlugin {
     private AutoStarter autoStarter;
     private LanguageManager languageManager;
     private PacketInterceptor packetInterceptor;
-
     private TTRWorldSetup setup;
-
     private boolean isCounting = false;
 
     @Override
@@ -66,12 +64,12 @@ public class TTRCore extends JavaPlugin {
         if (this.getConfig().getBoolean("enable_on_start")) {
             enabled = true;
         } else {
-            getLogger().warning("" + PluginString.DISABLED_ON_STARTUP_NOTICE);
+            getLogger().warning("TTR is disabled on server start. Use /ttrenable to enable it on start. Make sure to be using the desired map.");
         }
         this.configManager = new TTRConfigManager(this.getConfig());
-        this.languageManager = new LanguageManager(this);
+        //this.languageManager = new LanguageManager(this);
         this.packetInterceptor = new PacketInterceptor(this);
-        for (Player player: this.getServer().getOnlinePlayers()) {
+        for (Player player : this.getServer().getOnlinePlayers()) {
             this.packetInterceptor.addPlayer(player);
         }
         if (enabled) {
@@ -86,7 +84,7 @@ public class TTRCore extends JavaPlugin {
             this.match = new TTRMatch(MatchStatus.DISABLED);
         }
 
-        this.getCommand("ttrstart").setExecutor(new StartMatchCommand());
+        this.getCommand("ttrstart").setExecutor(new StartMatchCommand(this));
         EnableDisableCommand enableDisableCommand = new EnableDisableCommand(this);
         this.getCommand("ttrenable").setExecutor(enableDisableCommand);
         this.getCommand("ttrdisable").setExecutor(enableDisableCommand);
@@ -98,7 +96,7 @@ public class TTRCore extends JavaPlugin {
     public void onDisable() {
         try {
             this.scoreboard.removeScoreboard();
-            for (Player player: this.getServer().getOnlinePlayers()) {
+            for (Player player : this.getServer().getOnlinePlayers()) {
                 this.packetInterceptor.removePlayer(player);
             }
         } catch (NullPointerException ignored) {
@@ -153,4 +151,7 @@ public class TTRCore extends JavaPlugin {
         return packetInterceptor;
     }
 
+    public String translate(String message) {
+        return ChatColor.translateAlternateColorCodes('&', message);
+    }
 }

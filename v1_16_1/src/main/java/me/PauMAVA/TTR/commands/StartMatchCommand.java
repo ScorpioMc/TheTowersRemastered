@@ -18,39 +18,61 @@
 
 package me.PauMAVA.TTR.commands;
 
+import static org.bukkit.ChatColor.*;
+
 import me.PauMAVA.TTR.TTRCore;
 import me.PauMAVA.TTR.lang.PluginString;
-import me.PauMAVA.TTR.util.TTRPrefix;
+import me.PauMAVA.TTR.teams.TTRTeam;
 import me.PauMAVA.TTR.util.XPBarTimer;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.scoreboard.Team;
+
+import java.util.List;
 
 public class StartMatchCommand implements CommandExecutor {
+
+    private TTRCore plugin;
+
+    public StartMatchCommand(TTRCore plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public boolean onCommand(CommandSender theSender, Command command, String label, String[] args) {
         if (!theSender.hasPermission("ttr.start")) {
-            theSender.sendMessage(ChatColor.DARK_RED + "You are not permitted to use this command.");
+            theSender.sendMessage(DARK_RED + "You are not permitted to use this command.");
+            return true;
         }
-        if (TTRCore.getInstance().enabled() && !TTRCore.getInstance().getCurrentMatch().isOnCourse()) {
-            int timer;
-            if (args == null || args.length == 0) {
-                timer = 10;
-            } else {
-                try {
-                    timer = Integer.parseInt(args[0]);
-                } catch (NumberFormatException e) {
-                    theSender.sendMessage(TTRPrefix.TTR_GAME + "" + ChatColor.GRAY + PluginString.ERROR_EXPECTED_INTEGER);
-                    return false;
-                }
-            }
-            try {
-                new XPBarTimer(timer, TTRCore.getInstance().getCurrentMatch().getClass().getMethod("startMatch")).runTaskTimer(TTRCore.getInstance(), 0L, 20L);
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+
+        String game = plugin.translate("&7&l[&r&a&lThe Towers&r&7&l]&r ");
+        if (!TTRCore.getInstance().enabled()) {
+            theSender.sendMessage(game + RED + "You need to do '/ttrenable' first before trying to start.");
+            return true;
+        }
+
+        for (TTRTeam team : TTRCore.getInstance().getTeamHandler().getTeams()) {
+            if (team.getPlayers().size() < 1) {
+                theSender.sendMessage(game + RED + "Game needs at least one player per team.");
+                return true;
             }
         }
+
+        if (TTRCore.getInstance().getCurrentMatch().isOnCourse()) {
+            theSender.sendMessage(game + RED + "Game already started");
+            return true;
+        }
+
+        int timer = 10;
+        try {
+            new XPBarTimer(timer, plugin.getCurrentMatch().getClass().getMethod("startMatch")).runTaskTimer(TTRCore.getInstance(), 0L, 20L);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        Bukkit.broadcastMessage(game + GREEN + "Game will start in " + timer + " seconds.");
         return false;
     }
 }

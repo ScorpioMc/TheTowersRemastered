@@ -18,6 +18,8 @@
 
 package me.PauMAVA.TTR.match;
 
+import static org.bukkit.ChatColor.*;
+
 import me.PauMAVA.TTR.TTRCore;
 import me.PauMAVA.TTR.lang.PluginString;
 import me.PauMAVA.TTR.teams.TTRTeam;
@@ -91,24 +93,25 @@ public class TTRMatch {
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             player.setGameMode(GameMode.SPECTATOR);
             ChatColor teamColor = TTRCore.getInstance().getConfigManager().getTeamColor(team.getIdentifier());
-            player.sendTitle(teamColor + "" + ChatColor.BOLD + team.getIdentifier(), ChatColor.AQUA + "" + PluginString.WIN_OUTPUT, 10, 100, 20);
+            player.sendTitle(teamColor + "" + ChatColor.BOLD + team.getIdentifier(), ChatColor.AQUA + "WINS!", 10, 100, 20);
             player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 10, 1);
         }
         TTRCore.getInstance().getWorldHandler().enableDayLightCycle();
         TTRCore.getInstance().getWorldHandler().enableWeatherCycle();
         TTRCore.getInstance().getWorldHandler().restoreDifficulty();
-        Bukkit.broadcastMessage(ChatColor.RED + "Restarting server in 10 seconds.");
+        Bukkit.broadcastMessage(RED + "Restarting server in 10 seconds.");
         new BukkitRunnable() {
             int i = 10;
+
             @Override
             public void run() {
                 i--;
                 if (i == 5) {
-                    Bukkit.broadcastMessage(ChatColor.RED + "Restarting server in 5 seconds.");
+                    Bukkit.broadcastMessage(RED + "Restarting server in 5 seconds.");
                 }
                 if (i == 0) {
                     for (Player all : Bukkit.getOnlinePlayers()) {
-                        all.kickPlayer(ChatColor.RED + "Game ended, restarting server.");
+                        all.kickPlayer(RED + "Game ended, restarting server.");
                     }
                     Bukkit.shutdown();
                 }
@@ -125,7 +128,7 @@ public class TTRMatch {
                     Class<?> enumClientCommand = ReflectionUtils.getNMSClass("PacketPlayInClientCommand$EnumClientCommand");
                     // TODO Test if enumClientCommand.getEnumConstants())[0] works.
                     Object performRespawnConstant = null;
-                    for (Object constant: enumClientCommand.getEnumConstants()) {
+                    for (Object constant : enumClientCommand.getEnumConstants()) {
                         if (constant.toString().equalsIgnoreCase("PERFORM_RESPAWN")) {
                             performRespawnConstant = constant;
                             break;

@@ -38,13 +38,10 @@ public class LanguageManager {
 
     private void extractLanguageFiles() {
         HashMap<File, InputStream> streams = new HashMap<>();
-        for (Locale locale: LocaleRegistry.getLocales()) {
-            streams.put(
-                    new File(plugin.getDataFolder().getPath() + "/lang_" + locale.getShortName() + ".yml"),
-                    LanguageManager.class.getResourceAsStream("/lang_" + locale.getShortName() + ".yml")
-                    );
+        for (Locale locale : LocaleRegistry.getLocales()) {
+            streams.put(new File(plugin.getDataFolder().getPath() + "/lang_" + locale.getShortName() + ".yml"), LanguageManager.class.getResourceAsStream("/lang_" + locale.getShortName() + ".yml"));
         }
-        for (File destination: streams.keySet()) {
+        for (File destination : streams.keySet()) {
             try {
                 if (!destination.exists()) {
                     destination.createNewFile();

@@ -158,8 +158,8 @@ public class TTRConfigManager {
         ConfigurationSection team2section = teamsSection.createSection("Blue Team");
         team1section.addDefault("color", "RED");
         team2section.addDefault("color", "BLUE");
-        team1section.addDefault("spawn", new Location(this.world, 84, 192, 1152));
-        team2section.addDefault("spawn", new Location(this.world, -83, 192, 1152));
+        team1section.addDefault("spawn", new Location(this.world, 84.5, 192, 1152.5, 90, 0));
+        team2section.addDefault("spawn", new Location(this.world, -83.5, 192, 1152.5, -90, 0));
         team1section.addDefault("cage", new Location(this.world, 84, 200, 1152));
         team2section.addDefault("cage", new Location(this.world, -83, 200, 1152));
         this.configuration.options().copyDefaults(true);

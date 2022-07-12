@@ -21,7 +21,6 @@ package me.PauMAVA.TTR.chat;
 
 import me.PauMAVA.TTR.TTRCore;
 import me.PauMAVA.TTR.teams.TTRTeam;
-import me.PauMAVA.TTR.util.TTRPrefix;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -37,18 +36,20 @@ public class TTRChatManager {
     }
 
     private static void dispatchGlobalMessage(String string) {
+        String global = TTRCore.getInstance().translate("&7&l[&r&5&lGLOBAL&r&7&l]&r ");
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-            p.sendMessage(TTRPrefix.TTR_GLOBAL + "" + ChatColor.GRAY + string);
+            p.sendMessage(global + "" + ChatColor.GRAY + string);
         }
     }
 
     private static void dispatchTeamMessage(String string, Player sender) {
         TTRTeam playerTeam = TTRCore.getInstance().getTeamHandler().getPlayerTeam(sender);
+        String team = TTRCore.getInstance().translate("&7&l[&r&b&lTEAM&r&7&l]&r ");
         if (playerTeam == null) {
             return;
         }
         for (Player p : playerTeam.getPlayers()) {
-            p.sendMessage(TTRPrefix.TTR_TEAM + "" + ChatColor.GRAY + string);
+            p.sendMessage(team + "" + ChatColor.GRAY + string);
         }
     }
 
